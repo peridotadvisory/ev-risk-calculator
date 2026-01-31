@@ -13,6 +13,134 @@
     }
 
     h2 {
+      color: #336633;
+    }
+
+    input[type=range] {
+      width: 350px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      font-size: 20px;
+      padding: 8px 16px;
+      background-color: #ccaa33;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #b3972a;
+    }
+
+    #output {
+      font-size: 28px;
+      color: #003366;
+      margin-top: 20px;
+    }
+
+    .risk-bar {
+      height: 28px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    .checkboxes {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    #explanation {
+      font-size: 18px;
+      color: #333;
+      margin-top: 10px;
+    }
+
+    .risk-labels {
+      margin-top: 12px;
+      font-size: 18px;
+      color: #222;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Enterprise Value at Risk Calculator</h2>
+
+<label>Annual EBITDA ($ in millions)</label><br>
+<input type="range" id="ebitda" min="1" max="20" step="0.1" value="5">
+<span id="ebitdaValue">5M</span><br><br>
+
+<label>Baseline Disruption (%)</label><br>
+<input type="range" id="baseline" min="0" max="50" step="1" value="20">
+<span id="baselineValue">20%</span><br><br>
+
+<div class="checkboxes">
+  <label><input type="checkbox" id="opsRisk"> Single‑site/manual‑heavy operations → +7%</label><br>
+  <label><input type="checkbox" id="clientRisk"> High client concentration → +10%</label><br>
+  <label><input type="checkbox" id="keyRisk"> Key personnel critical → +10%</label><br>
+</div>
+
+<p id="explanation">Baseline risk: 20%</p>
+
+<ul style="font-size:18px; color:#444; list-style-type:disc; margin-left:20px;">
+  <li>Operations add‑on: +7%</li>
+  <li>Client concentration add‑on: +10%</li>
+  <li>Key personnel add‑on: +10%</li>
+</ul>
+
+<button id="calculateBtn">Calculate</button>
+
+<div id="output"></div>
+
+<script src="calc.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const ebitdaSlider = document.getElementById("ebitda");
+  const baselineSlider = document.getElementById("baseline");
+  const calculateBtn = document.getElementById("calculateBtn");
+
+  ebitdaSlider.addEventListener("input", function() {
+    document.getElementById("ebitdaValue").innerText = ebitdaSlider.value + "M";
+  });
+
+  baselineSlider.addEventListener("input", function() {
+    document.getElementById("baselineValue").innerText = baselineSlider.value + "%";
+  });
+
+  calculateBtn.addEventListener("click", calculateEV);
+
+  ["opsRisk", "clientRisk", "keyRisk"].forEach(id => {
+    document.getElementById(id).addEventListener("change", calculateEV);
+  });
+});
+</script>
+
+</body>
+</html>
+
+
+
+<!-- V3 Code -->
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Enterprise Value at Risk Calculator</title>
+  <style>
+    body {
+      font-family: Optima, Arial, sans-serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      padding: 40px;
+      background-color: #f9f9f9;
+    }
+
+    h2 {
       color: #336633; /* Peridot green */
     }
 
@@ -118,7 +246,12 @@
 </script>
 
 </body>
-</html>
+</html> -->
+
+
+<!-- OLD Code --> 
+
+
 
 
 <!-- <!DOCTYPE html>
