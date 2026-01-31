@@ -1,37 +1,62 @@
-//V7 Code//
+//V8 Code//
 
-function calculateEV() {
-  const ebitda = parseFloat(document.getElementById("ebitda").value) * 1_000_000;
-  let disruption = parseFloat(document.getElementById("baseline").value) / 100;
+document.addEventListener("DOMContentLoaded", function() {
+  const ebitdaSlider = document.getElementById("ebitda");
+  const baselineSlider = document.getElementById("baseline");
+  const calculateBtn = document.getElementById("calculateBtn");
 
-  // Only keep baseline explanation
-  document.getElementById("explanation").innerText = `Baseline risk: ${document.getElementById("baseline").value}%`;
+  // Update slider display values
+  ebitdaSlider.addEventListener("input", function() {
+    document.getElementById("ebitdaValue").innerText = ebitdaSlider.value + "M";
+  });
 
+  baselineSlider.addEventListener("input", function() {
+    document.getElementById("baselineValue").innerText = baselineSlider.value + "%";
+    document.getElementById("explanation").innerText = `Baseline risk: ${baselineSlider.value}%`;
+  });
+
+  // Update bullets dynamically when checkboxes change
+  ["opsRisk", "clientRisk", "keyRisk"].forEach(id => {
+    document.getElementById(id).addEventListener("change", updateBulletsOnly);
+  });
+
+  // Calculate EV only when Calculate button is clicked
+  calculateBtn.addEventListener("click", calculateEV);
+});
+
+// Function to render checkbox bullets only
+function updateBulletsOnly() {
   const bullets = [];
-
-  if(document.getElementById("opsRisk").checked) {
-    disruption += 0.07;
+  if (document.getElementById("opsRisk").checked) {
     bullets.push("Operations add‑on: +7%");
   }
-  if(document.getElementById("clientRisk").checked) {
-    disruption += 0.10;
+  if (document.getElementById("clientRisk").checked) {
     bullets.push("Client concentration add‑on: +10%");
   }
-  if(document.getElementById("keyRisk").checked) {
-    disruption += 0.10;
+  if (document.getElementById("keyRisk").checked) {
     bullets.push("Key personnel add‑on: +10%");
   }
 
-  // Render bullet list dynamically
   const bulletContainer = document.getElementById("riskBullets");
-  bulletContainer.innerHTML = "";
+  bulletContainer.innerHTML = ""; // clear previous bullets
   bullets.forEach(item => {
     const li = document.createElement("li");
     li.innerText = item;
     bulletContainer.appendChild(li);
   });
+}
 
-  // Calculate EV only on click
+// Function to calculate EV at risk
+function calculateEV() {
+  const ebitda = parseFloat(document.getElementById("ebitda").value) * 1_000_000;
+  let disruption = parseFloat(document.getElementById("baseline").value) / 100;
+
+  // Add disruption from checkboxes
+  if (document.getElementById("opsRisk").checked) disruption += 0.07;
+  if (document.getElementById("clientRisk").checked) disruption += 0.10;
+  if (document.getElementById("keyRisk").checked) disruption += 0.10;
+
+  // EV Calculation
   const baseMultiple = 6;
   const riskMultiple = 5;
   const normalizedEBITDA = ebitda * (1 - disruption);
@@ -39,11 +64,10 @@ function calculateEV() {
   const evRisk = normalizedEBITDA * riskMultiple;
   const evAtRisk = evBase - evRisk;
 
-  // Display EV
+  // Display EV result only on Calculate
   document.getElementById("output").innerHTML =
     `<div style="font-weight:bold; margin-top:10px;">Enterprise Value at Risk: $${evAtRisk.toLocaleString()}</div>`;
 }
-
 
 
 
