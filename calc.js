@@ -1,50 +1,109 @@
-//V4 Code//
+//V5 Code//
 
 function calculateEV() {
   const ebitda = parseFloat(document.getElementById("ebitda").value) * 1_000_000;
   let disruption = parseFloat(document.getElementById("baseline").value) / 100;
 
   let explanation = `Baseline risk: ${document.getElementById("baseline").value}%`;
+  const bullets = [];
 
   if(document.getElementById("opsRisk").checked) {
     disruption += 0.07;
-    explanation += "; +Ops";
+    bullets.push("Operations add‑on: +7%");
+    explanation += " ; +Ops";
   }
   if(document.getElementById("clientRisk").checked) {
     disruption += 0.10;
-    explanation += "; +Clients";
+    bullets.push("Client concentration add‑on: +10%");
+    explanation += " ; +Clients";
   }
   if(document.getElementById("keyRisk").checked) {
     disruption += 0.10;
-    explanation += "; +Key Personnel";
+    bullets.push("Key personnel add‑on: +10%");
+    explanation += " ; +Key Personnel";
   }
 
   document.getElementById("explanation").innerText = explanation;
 
+  // Render bullet list dynamically
+  const bulletContainer = document.getElementById("riskBullets");
+  bulletContainer.innerHTML = "";
+  bullets.forEach(item => {
+    const li = document.createElement("li");
+    li.innerText = item;
+    bulletContainer.appendChild(li);
+  });
+
+  // EV calculation
   const baseMultiple = 6;
   const riskMultiple = 5;
-
   const normalizedEBITDA = ebitda * (1 - disruption);
   const evBase = ebitda * baseMultiple;
   const evRisk = normalizedEBITDA * riskMultiple;
   const evAtRisk = evBase - evRisk;
 
-  // Breakdown amounts
-  const keyAmt = Math.round((0.12 * disruption * evBase)/1000);
-  const opsAmt = Math.round((0.06 * disruption * evBase)/1000);
-  const clientAmt = Math.round((0.02 * disruption * evBase)/1000);
-
+  // Only show the main EV
   document.getElementById("output").innerHTML =
     `<div style="font-weight:bold; margin-top:10px;">Enterprise Value at Risk: $${evAtRisk.toLocaleString()}</div>
      <div class="risk-bar" style="width:100%; background:#336633;"></div>
      <div class="risk-bar" style="width:100%; background:#66CC66;"></div>
-     <div class="risk-bar" style="width:100%; background:#CCAA33;"></div>
-     <div class="risk-labels">
-       <div><strong>Key Personnel Risk:</strong> $${keyAmt}K</div>
-       <div><strong>Operational Risk:</strong> $${opsAmt}K</div>
-       <div><strong>Client Risk:</strong> $${clientAmt}K</div>
-     </div>`;
+     <div class="risk-bar" style="width:100%; background:#CCAA33;"></div>`;
 }
+
+
+
+
+
+
+
+
+//V4 Code//
+
+// function calculateEV() {
+//   const ebitda = parseFloat(document.getElementById("ebitda").value) * 1_000_000;
+//   let disruption = parseFloat(document.getElementById("baseline").value) / 100;
+
+//   let explanation = `Baseline risk: ${document.getElementById("baseline").value}%`;
+
+//   if(document.getElementById("opsRisk").checked) {
+//     disruption += 0.07;
+//     explanation += "; +Ops";
+//   }
+//   if(document.getElementById("clientRisk").checked) {
+//     disruption += 0.10;
+//     explanation += "; +Clients";
+//   }
+//   if(document.getElementById("keyRisk").checked) {
+//     disruption += 0.10;
+//     explanation += "; +Key Personnel";
+//   }
+
+//   document.getElementById("explanation").innerText = explanation;
+
+//   const baseMultiple = 6;
+//   const riskMultiple = 5;
+
+//   const normalizedEBITDA = ebitda * (1 - disruption);
+//   const evBase = ebitda * baseMultiple;
+//   const evRisk = normalizedEBITDA * riskMultiple;
+//   const evAtRisk = evBase - evRisk;
+
+//   // Breakdown amounts
+//   const keyAmt = Math.round((0.12 * disruption * evBase)/1000);
+//   const opsAmt = Math.round((0.06 * disruption * evBase)/1000);
+//   const clientAmt = Math.round((0.02 * disruption * evBase)/1000);
+
+//   document.getElementById("output").innerHTML =
+//     `<div style="font-weight:bold; margin-top:10px;">Enterprise Value at Risk: $${evAtRisk.toLocaleString()}</div>
+//      <div class="risk-bar" style="width:100%; background:#336633;"></div>
+//      <div class="risk-bar" style="width:100%; background:#66CC66;"></div>
+//      <div class="risk-bar" style="width:100%; background:#CCAA33;"></div>
+//      <div class="risk-labels">
+//        <div><strong>Key Personnel Risk:</strong> $${keyAmt}K</div>
+//        <div><strong>Operational Risk:</strong> $${opsAmt}K</div>
+//        <div><strong>Client Risk:</strong> $${clientAmt}K</div>
+//      </div>`;
+// }
 
 
 
