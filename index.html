@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Enterprise Value Risk Calculator</title>
+</head>
+<body style="font-family: Arial; padding: 40px;">
+  <h2>Enterprise Value at Risk</h2>
+
+  <label>Annual EBITDA ($)</label><br>
+  <input id="ebitda" type="number" value="5000000"><br><br>
+
+  <label>Disruption Impact (%)</label><br>
+  <input id="disruption" type="number" value="20"><br><br>
+
+  <button onclick="calculateEV()">Calculate</button>
+
+  <h3 id="output"></h3>
+
+  <script src="calc.js"></script>
+</body>
+</html>
