@@ -1,4 +1,4 @@
-//V5 Code//
+//V6 Code//
 
 function calculateEV() {
   const ebitda = parseFloat(document.getElementById("ebitda").value) * 1_000_000;
@@ -23,9 +23,10 @@ function calculateEV() {
     explanation += " ; +Key Personnel";
   }
 
+  // Update explanation text
   document.getElementById("explanation").innerText = explanation;
 
-  // Render bullet list dynamically
+  // Render bullet list dynamically (checkbox add-ons)
   const bulletContainer = document.getElementById("riskBullets");
   bulletContainer.innerHTML = "";
   bullets.forEach(item => {
@@ -34,7 +35,7 @@ function calculateEV() {
     bulletContainer.appendChild(li);
   });
 
-  // EV calculation
+  // Only calculate and display EV after clicking Calculate
   const baseMultiple = 6;
   const riskMultiple = 5;
   const normalizedEBITDA = ebitda * (1 - disruption);
@@ -42,12 +43,9 @@ function calculateEV() {
   const evRisk = normalizedEBITDA * riskMultiple;
   const evAtRisk = evBase - evRisk;
 
-  // Only show the main EV
+  // Show EV result
   document.getElementById("output").innerHTML =
-    `<div style="font-weight:bold; margin-top:10px;">Enterprise Value at Risk: $${evAtRisk.toLocaleString()}</div>
-     <div class="risk-bar" style="width:100%; background:#336633;"></div>
-     <div class="risk-bar" style="width:100%; background:#66CC66;"></div>
-     <div class="risk-bar" style="width:100%; background:#CCAA33;"></div>`;
+    `<div style="font-weight:bold; margin-top:10px;">Enterprise Value at Risk: $${evAtRisk.toLocaleString()}</div>`;
 }
 
 
