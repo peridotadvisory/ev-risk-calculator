@@ -1,5 +1,5 @@
 
-<!--V10 code -->
+<!--v11 code -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -64,6 +64,11 @@
       margin-top: 10px;
     }
 
+    #customMultipleSlider {
+      display: none;
+      margin-top: 10px;
+    }
+
     label {
       display: block;
       margin-bottom: 5px;
@@ -92,7 +97,14 @@
   <option value="9">Healthcare / Clinics</option>
   <option value="5">Construction / Engineering</option>
   <option value="6">Food & Beverage</option>
+  <option value="15">Real Estate (10–20x)</option>
 </select><br><br>
+
+<div id="customMultipleSlider">
+  <label for="reMultiple">Select Real Estate Multiple (10–20x):</label>
+  <input type="range" id="reMultiple" min="10" max="20" step="1" value="15">
+  <span id="reMultipleValue">15x</span>
+</div><br>
 
 <div class="checkboxes">
   <label><input type="checkbox" id="opsRisk"> Single‑site/manual-heavy operations → +7%</label>
