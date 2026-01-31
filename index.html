@@ -1,4 +1,119 @@
-<!--V9 Code -->
+
+<!--V10 code -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Enterprise Value at Risk Calculator</title>
+  <style>
+    body {
+      font-family: Optima, Arial, sans-serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      padding: 40px;
+      background-color: #f9f9f9;
+    }
+
+    h2 {
+      color: #336633;
+    }
+
+    input[type=range], select {
+      width: 350px;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    button {
+      font-size: 20px;
+      padding: 8px 16px;
+      background-color: #ccaa33;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #b3972a;
+    }
+
+    #output {
+      font-size: 28px;
+      color: #003366;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .checkboxes {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    #riskBullets {
+      font-size: 18px;
+      color: #336633;
+      margin-left: 20px;
+      margin-top: 10px;
+    }
+
+    #explanation {
+      font-size: 18px;
+      color: #333;
+      margin-top: 10px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Enterprise Value at Risk Calculator</h2>
+
+<label for="ebitda">Annual EBITDA ($ in millions)</label>
+<input type="range" id="ebitda" min="1" max="20" step="0.1" value="5">
+<span id="ebitdaValue">5M</span><br><br>
+
+<label for="baseline">Baseline Disruption (%)</label>
+<input type="range" id="baseline" min="0" max="50" step="1" value="20">
+<span id="baselineValue">20%</span><br><br>
+
+<label for="industry">Industry:</label>
+<select id="industry">
+  <option value="6">Manufacturing</option>
+  <option value="5">Distribution / Wholesale</option>
+  <option value="8">Tech / SaaS</option>
+  <option value="4.5">Retail / Consumer</option>
+  <option value="7">Professional Services</option>
+  <option value="9">Healthcare / Clinics</option>
+  <option value="5">Construction / Engineering</option>
+  <option value="6">Food & Beverage</option>
+</select><br><br>
+
+<div class="checkboxes">
+  <label><input type="checkbox" id="opsRisk"> Single‑site/manual-heavy operations → +7%</label>
+  <label><input type="checkbox" id="clientRisk"> High client concentration → +10%</label>
+  <label><input type="checkbox" id="keyRisk"> Key personnel critical → +10%</label>
+</div>
+
+<p id="explanation">Baseline risk: 20%</p>
+
+<ul id="riskBullets"></ul>
+
+<button id="calculateBtn">Calculate</button>
+
+<div id="output"></div>
+
+<script src="calc.js"></script>
+
+</body>
+</html>
+
+<!--V9 Code --
 <!DOCTYPE html>
 <html>
 <head>
