@@ -1,5 +1,6 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
+  
 <head>
   <title>Enterprise Value Risk Calculator</title>
 </head>
@@ -17,5 +18,74 @@
   <h3 id="output"></h3>
 
   <script src="calc.js"></script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Enterprise Value at Risk Calculator</title>
+  <style>
+    body {
+      font-family: Optima, Arial, sans-serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      padding: 40px;
+    }
+    input[type=range] {
+      width: 350px;
+      margin-bottom: 10px;
+    }
+    #output {
+      font-size: 28px;
+      color: #003366;
+      margin-top: 20px;
+    }
+    .risk-bar {
+      height: 24px;
+      color: white;
+      text-align: center;
+      line-height: 24px;
+      margin-bottom: 4px;
+    }
+    .checkboxes {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+    #explanation {
+      font-size: 16px;
+      color: #666;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Enterprise Value at Risk Calculator</h2>
+
+<label>Annual EBITDA ($ in millions)</label><br>
+<input type="range" id="ebitda" min="1" max="20" step="0.1" value="5" 
+       oninput="ebitdaValue.innerText=this.value+'M'; calculateEV();">
+<span id="ebitdaValue">5M</span><br><br>
+
+<label>Baseline Disruption (%)</label><br>
+<input type="range" id="baseline" min="0" max="50" step="1" value="20" 
+       oninput="baselineValue.innerText=this.value+'%'; calculateEV();">
+<span id="baselineValue">20%</span><br><br>
+
+<div class="checkboxes">
+  <label><input type="checkbox" id="opsRisk" onchange="calculateEV()"> Single-site/manual-heavy operations → +7%</label><br>
+  <label><input type="checkbox" id="clientRisk" onchange="calculateEV()"> High client concentration (top 1-2 clients >50% revenue) → +10%</label><br>
+  <label><input type="checkbox" id="keyRisk" onchange="calculateEV()"> Key personnel: single executive critical → +10%</label><br>
+</div>
+
+<p id="explanation">Baseline risk: 20%</p>
+
+<button onclick="calculateEV()" style="margin-top:10px; font-size:20px;">Calculate</button>
+
+<div id="output"></div>
+
+<script src="calc.js"></script>
 </body>
 </html>
