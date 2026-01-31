@@ -1,32 +1,28 @@
-//V6 Code//
+//V7 Code//
 
 function calculateEV() {
   const ebitda = parseFloat(document.getElementById("ebitda").value) * 1_000_000;
   let disruption = parseFloat(document.getElementById("baseline").value) / 100;
 
-  let explanation = `Baseline risk: ${document.getElementById("baseline").value}%`;
+  // Only keep baseline explanation
+  document.getElementById("explanation").innerText = `Baseline risk: ${document.getElementById("baseline").value}%`;
+
   const bullets = [];
 
   if(document.getElementById("opsRisk").checked) {
     disruption += 0.07;
     bullets.push("Operations add‑on: +7%");
-    explanation += " ; +Ops";
   }
   if(document.getElementById("clientRisk").checked) {
     disruption += 0.10;
     bullets.push("Client concentration add‑on: +10%");
-    explanation += " ; +Clients";
   }
   if(document.getElementById("keyRisk").checked) {
     disruption += 0.10;
     bullets.push("Key personnel add‑on: +10%");
-    explanation += " ; +Key Personnel";
   }
 
-  // Update explanation text
-  document.getElementById("explanation").innerText = explanation;
-
-  // Render bullet list dynamically (checkbox add-ons)
+  // Render bullet list dynamically
   const bulletContainer = document.getElementById("riskBullets");
   bulletContainer.innerHTML = "";
   bullets.forEach(item => {
@@ -35,7 +31,7 @@ function calculateEV() {
     bulletContainer.appendChild(li);
   });
 
-  // Only calculate and display EV after clicking Calculate
+  // Calculate EV only on click
   const baseMultiple = 6;
   const riskMultiple = 5;
   const normalizedEBITDA = ebitda * (1 - disruption);
@@ -43,7 +39,7 @@ function calculateEV() {
   const evRisk = normalizedEBITDA * riskMultiple;
   const evAtRisk = evBase - evRisk;
 
-  // Show EV result
+  // Display EV
   document.getElementById("output").innerHTML =
     `<div style="font-weight:bold; margin-top:10px;">Enterprise Value at Risk: $${evAtRisk.toLocaleString()}</div>`;
 }
