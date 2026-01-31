@@ -1,11 +1,15 @@
-//v10 code 
+//v11 code 
 
 document.addEventListener("DOMContentLoaded", function() {
   const ebitdaSlider = document.getElementById("ebitda");
   const baselineSlider = document.getElementById("baseline");
+  const industrySelect = document.getElementById("industry");
   const calculateBtn = document.getElementById("calculateBtn");
+  const customMultipleDiv = document.getElementById("customMultipleSlider");
+  const reSlider = document.getElementById("reMultiple");
+  const reValue = document.getElementById("reMultipleValue");
 
-  // Update slider display values
+  // Update EBITDA and baseline slider displays
   ebitdaSlider.addEventListener("input", function() {
     document.getElementById("ebitdaValue").innerText = ebitdaSlider.value + "M";
   });
@@ -15,12 +19,26 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("explanation").innerText = `Baseline risk: ${baselineSlider.value}%`;
   });
 
+  // Update Real Estate slider display
+  reSlider.addEventListener("input", function() {
+    reValue.innerText = this.value + "x";
+  });
+
+  // Show custom multiple slider if Real Estate is selected
+  industrySelect.addEventListener("change", function() {
+    if (this.selectedOptions[0].text.includes("Real Estate")) {
+      customMultipleDiv.style.display = "block";
+    } else {
+      customMultipleDiv.style.display = "none";
+    }
+  });
+
   // Update bullets on checkbox change ONLY
   ["opsRisk", "clientRisk", "keyRisk"].forEach(id => {
     document.getElementById(id).addEventListener("change", updateBulletsOnly);
   });
 
-  // Calculate EV only when button is clicked
+  // Calculate EV only on button click
   calculateBtn.addEventListener("click", calculateEV);
 });
 
@@ -49,16 +67,19 @@ function calculateEV() {
   if (document.getElementById("clientRisk").checked) disruption += 0.10;
   if (document.getElementById("keyRisk").checked) disruption += 0.10;
 
-  // Industry multiple
-  const industryMultiple = parseFloat(document.getElementById("industry").value);
+  // Determine industry multiple
+  let industryMultiple = parseFloat(document.getElementById("industry").value);
 
-  // Calculate EV at Risk
+  // If Real Estate, use slider value
+  if (document.getElementById("industry").selectedOptions[0].text.includes("Real Estate")) {
+    industryMultiple = parseFloat(document.getElementById("reMultiple").value);
+  }
+
   const normalizedEBITDA = ebitda * (1 - disruption);
   const evBase = ebitda * industryMultiple;
   const evRisk = normalizedEBITDA * industryMultiple;
   const evAtRisk = evBase - evRisk;
 
-  // Display only on calculate
   document.getElementById("output").innerHTML =
     `<div>Enterprise Value at Risk: $${evAtRisk.toLocaleString()}</div>`;
 }
