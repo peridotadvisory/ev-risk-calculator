@@ -1,4 +1,4 @@
-//V8 Code//
+//V9 Code//
 
 document.addEventListener("DOMContentLoaded", function() {
   const ebitdaSlider = document.getElementById("ebitda");
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("explanation").innerText = `Baseline risk: ${baselineSlider.value}%`;
   });
 
-  // Update bullets dynamically when checkboxes change
+  // Update bullets on checkbox change ONLY (do NOT calculate EV)
   ["opsRisk", "clientRisk", "keyRisk"].forEach(id => {
     document.getElementById(id).addEventListener("change", updateBulletsOnly);
   });
@@ -27,18 +27,12 @@ document.addEventListener("DOMContentLoaded", function() {
 // Function to render checkbox bullets only
 function updateBulletsOnly() {
   const bullets = [];
-  if (document.getElementById("opsRisk").checked) {
-    bullets.push("Operations add‑on: +7%");
-  }
-  if (document.getElementById("clientRisk").checked) {
-    bullets.push("Client concentration add‑on: +10%");
-  }
-  if (document.getElementById("keyRisk").checked) {
-    bullets.push("Key personnel add‑on: +10%");
-  }
+  if (document.getElementById("opsRisk").checked) bullets.push("Operations add‑on: +7%");
+  if (document.getElementById("clientRisk").checked) bullets.push("Client concentration add‑on: +10%");
+  if (document.getElementById("keyRisk").checked) bullets.push("Key personnel add‑on: +10%");
 
   const bulletContainer = document.getElementById("riskBullets");
-  bulletContainer.innerHTML = ""; // clear previous bullets
+  bulletContainer.innerHTML = "";
   bullets.forEach(item => {
     const li = document.createElement("li");
     li.innerText = item;
@@ -68,6 +62,7 @@ function calculateEV() {
   document.getElementById("output").innerHTML =
     `<div style="font-weight:bold; margin-top:10px;">Enterprise Value at Risk: $${evAtRisk.toLocaleString()}</div>`;
 }
+
 
 
 
