@@ -1,4 +1,4 @@
-<!--V6 Code -->
+<!--V9 Code -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -55,7 +55,7 @@
 
     #riskBullets {
       font-size: 18px;
-      color: #444;
+      color: #336633;
       margin-left: 20px;
       margin-top: 10px;
     }
@@ -88,30 +88,10 @@
 <div id="output"></div>
 
 <script src="calc.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const ebitdaSlider = document.getElementById("ebitda");
-  const baselineSlider = document.getElementById("baseline");
-  const calculateBtn = document.getElementById("calculateBtn");
-
-  ebitdaSlider.addEventListener("input", function() {
-    document.getElementById("ebitdaValue").innerText = ebitdaSlider.value + "M";
-  });
-
-  baselineSlider.addEventListener("input", function() {
-    document.getElementById("baselineValue").innerText = baselineSlider.value + "%";
-  });
-
-  calculateBtn.addEventListener("click", calculateEV);
-
-  ["opsRisk", "clientRisk", "keyRisk"].forEach(id => {
-    document.getElementById(id).addEventListener("change", calculateEV);
-  });
-});
-</script>
 
 </body>
 </html>
+
 
 
 
