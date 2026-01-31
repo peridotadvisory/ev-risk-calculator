@@ -1,5 +1,73 @@
-//V9 Code//
+//v10 code 
 
+document.addEventListener("DOMContentLoaded", function() {
+  const ebitdaSlider = document.getElementById("ebitda");
+  const baselineSlider = document.getElementById("baseline");
+  const calculateBtn = document.getElementById("calculateBtn");
+
+  // Update slider display values
+  ebitdaSlider.addEventListener("input", function() {
+    document.getElementById("ebitdaValue").innerText = ebitdaSlider.value + "M";
+  });
+
+  baselineSlider.addEventListener("input", function() {
+    document.getElementById("baselineValue").innerText = baselineSlider.value + "%";
+    document.getElementById("explanation").innerText = `Baseline risk: ${baselineSlider.value}%`;
+  });
+
+  // Update bullets on checkbox change ONLY
+  ["opsRisk", "clientRisk", "keyRisk"].forEach(id => {
+    document.getElementById(id).addEventListener("change", updateBulletsOnly);
+  });
+
+  // Calculate EV only when button is clicked
+  calculateBtn.addEventListener("click", calculateEV);
+});
+
+// Function to render checkbox bullets only
+function updateBulletsOnly() {
+  const bullets = [];
+  if (document.getElementById("opsRisk").checked) bullets.push("Operations add‑on: +7%");
+  if (document.getElementById("clientRisk").checked) bullets.push("Client concentration add‑on: +10%");
+  if (document.getElementById("keyRisk").checked) bullets.push("Key personnel add‑on: +10%");
+
+  const bulletContainer = document.getElementById("riskBullets");
+  bulletContainer.innerHTML = "";
+  bullets.forEach(item => {
+    const li = document.createElement("li");
+    li.innerText = item;
+    bulletContainer.appendChild(li);
+  });
+}
+
+// Function to calculate EV at risk
+function calculateEV() {
+  const ebitda = parseFloat(document.getElementById("ebitda").value) * 1_000_000;
+  let disruption = parseFloat(document.getElementById("baseline").value) / 100;
+
+  if (document.getElementById("opsRisk").checked) disruption += 0.07;
+  if (document.getElementById("clientRisk").checked) disruption += 0.10;
+  if (document.getElementById("keyRisk").checked) disruption += 0.10;
+
+  // Industry multiple
+  const industryMultiple = parseFloat(document.getElementById("industry").value);
+
+  // Calculate EV at Risk
+  const normalizedEBITDA = ebitda * (1 - disruption);
+  const evBase = ebitda * industryMultiple;
+  const evRisk = normalizedEBITDA * industryMultiple;
+  const evAtRisk = evBase - evRisk;
+
+  // Display only on calculate
+  document.getElementById("output").innerHTML =
+    `<div>Enterprise Value at Risk: $${evAtRisk.toLocaleString()}</div>`;
+}
+
+//V9 Code
+
+
+/*
+let index = Math.floor(Math.random() * array.length);
 document.addEventListener("DOMContentLoaded", function() {
   const ebitdaSlider = document.getElementById("ebitda");
   const baselineSlider = document.getElementById("baseline");
@@ -63,6 +131,8 @@ function calculateEV() {
     `<div style="font-weight:bold; margin-top:10px;">Enterprise Value at Risk: $${evAtRisk.toLocaleString()}</div>`;
 }
 
+
+*/
 
 
 
