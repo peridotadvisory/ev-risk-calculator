@@ -3,105 +3,140 @@
 <!-- v12 bar chart -->
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>EV Risk Calculator</title>
+  <meta charset="UTF-8">
+  <title>Enterprise Value at Risk Calculator</title>
 
-  <!-- Chart.js -->
+  <!-- Chart.js (NEW, required) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      background: #f7f7f7;
+      font-family: Optima, Arial, sans-serif;
+      font-size: 20px;
+      color: #1a1a1a;
       padding: 40px;
+      background-color: #f9f9f9;
     }
 
-    .container {
-      max-width: 720px;
-      margin: 0 auto;
-      background: #ffffff;
-      padding: 32px;
-      border-radius: 8px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    h2 {
+      color: #336633;
     }
 
-    h1 {
-      font-size: 22px;
-      margin-bottom: 24px;
+    input[type=range], select {
+      width: 350px;
+      margin-bottom: 10px;
+      font-size: 18px;
     }
 
-    .form-group {
-      margin-bottom: 20px;
+    button {
+      font-size: 20px;
+      padding: 8px 16px;
+      background-color: #ccaa33;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #b3972a;
+    }
+
+    #output {
+      font-size: 28px;
+      color: #003366;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .checkboxes {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    #riskBullets {
+      font-size: 18px;
+      color: #336633;
+      margin-left: 20px;
+      margin-top: 10px;
+    }
+
+    #explanation {
+      font-size: 18px;
+      color: #333;
+      margin-top: 10px;
+    }
+
+    #customMultipleSlider {
+      display: none;
+      margin-top: 10px;
     }
 
     label {
       display: block;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      font-size: 15px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      margin-top: 16px;
-      padding: 12px 18px;
-      font-size: 15px;
-      font-weight: 600;
-      background: #2f3e46;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-
-    .results {
-      margin-top: 24px;
-    }
-
-    canvas {
-      margin-top: 32px;
-      display: none;
+      margin-bottom: 5px;
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>Enterprise Value Risk Calculator</h1>
 
-    <div class="form-group">
-      <label for="evToday">EV at Risk Today ($)</label>
-      <input type="number" id="evToday" value="35520000" />
-    </div>
+<h2>Enterprise Value at Risk Calculator</h2>
 
-    <div class="form-group">
-      <label for="exitYears">Exit (years from now)</label>
-      <input type="number" id="exitYears" value="10" min="1" />
-    </div>
+<label for="ebitda">Annual EBITDA ($ in millions)</label>
+<input type="range" id="ebitda" min="1" max="20" step="0.1" value="5">
+<span id="ebitdaValue">5M</span><br><br>
 
-    <button onclick="runCalculation()">Calculate</button>
+<label for="baseline">Baseline Disruption (%)</label>
+<input type="range" id="baseline" min="0" max="50" step="1" value="20">
+<span id="baselineValue">20%</span><br><br>
 
-    <div class="results">
-      <p><strong>EV at Exit (Inflation Only):</strong> <span id="evInflation">$0</span></p>
-      <p><strong>EV at Exit (Inflation + Conservative Growth):</strong> <span id="evGrowth">$0</span></p>
-    </div>
+<label for="industry">Industry:</label>
+<select id="industry">
+  <option value="6">Manufacturing</option>
+  <option value="5">Distribution / Wholesale</option>
+  <option value="8">Tech / SaaS</option>
+  <option value="4.5">Retail / Consumer</option>
+  <option value="7">Professional Services</option>
+  <option value="9">Healthcare / Clinics</option>
+  <option value="5">Construction / Engineering</option>
+  <option value="6">Food & Beverage</option>
+  <option value="15">Real Estate (10–20x)</option>
+</select><br><br>
 
-    <canvas id="evChart" height="120"></canvas>
-  </div>
+<div id="customMultipleSlider">
+  <label for="reMultiple">Select Real Estate Multiple (10–20x):</label>
+  <input type="range" id="reMultiple" min="10" max="20" step="1" value="15">
+  <span id="reMultipleValue">15x</span>
+</div><br>
 
-  <script src="script.js"></script>
+<div class="checkboxes">
+  <label><input type="checkbox" id="opsRisk"> Single-site/manual-heavy operations → +7%</label>
+  <label><input type="checkbox" id="clientRisk"> High client concentration → +10%</label>
+  <label><input type="checkbox" id="keyRisk"> Key personnel critical → +10%</label>
+</div>
+
+<p id="explanation">Baseline risk: 20%</p>
+
+<ul id="riskBullets"></ul>
+
+<!-- NEW: Exit years -->
+<label for="exitYears">Exit (years from now)</label>
+<input type="range" id="exitYears" min="1" max="15" step="1" value="10">
+<span id="exitYearsValue">10 years</span><br><br>
+
+<button id="calculateBtn">Calculate</button>
+
+<div id="output"></div>
+
+<!-- NEW: Bar chart -->
+<canvas id="evChart" style="display:none; margin-top:30px;" height="120"></canvas>
+
+<script src="calc.js"></script>
+
 </body>
 </html>
 
