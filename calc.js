@@ -109,8 +109,8 @@ function renderEVChart(evAtRiskToday) {
     data: {
       labels: [
         "EV at Risk Today",
-        "EV at Exit (Inflation)",
-        "EV at Exit (Inflation + Growth)"
+        "EV Risk at Exit (Inflation)",
+        "EV Risk at Exit (Inflation + Growth)"
       ],
       datasets: [{
         data: [evAtRiskToday, evInflation, evGrowth],
