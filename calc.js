@@ -1,6 +1,135 @@
 
 //bar chart 
+const INFLATION_RATE = 0.03;
+const CONSERVATIVE_TECH_GROWTH = 0.08;
 
+let evChartInstance = null;
+
+document.addEventListener("DOMContentLoaded", function() {
+  const ebitdaSlider = document.getElementById("ebitda");
+  const baselineSlider = document.getElementById("baseline");
+  const industrySelect = document.getElementById("industry");
+  const calculateBtn = document.getElementById("calculateBtn");
+  const customMultipleDiv = document.getElementById("customMultipleSlider");
+  const reSlider = document.getElementById("reMultiple");
+  const reValue = document.getElementById("reMultipleValue");
+
+  const exitYearsSlider = document.getElementById("exitYears");
+  const exitYearsValue = document.getElementById("exitYearsValue");
+
+  ebitdaSlider.addEventListener("input", function() {
+    document.getElementById("ebitdaValue").innerText = ebitdaSlider.value + "M";
+  });
+
+  baselineSlider.addEventListener("input", function() {
+    document.getElementById("baselineValue").innerText = baselineSlider.value + "%";
+    document.getElementById("explanation").innerText = `Baseline risk: ${baselineSlider.value}%`;
+  });
+
+  exitYearsSlider.addEventListener("input", function () {
+    exitYearsValue.innerText = `${this.value} years`;
+  });
+
+  reSlider.addEventListener("input", function() {
+    reValue.innerText = this.value + "x";
+  });
+
+  industrySelect.addEventListener("change", function() {
+    if (this.selectedOptions[0].text.includes("Real Estate")) {
+      customMultipleDiv.style.display = "block";
+    } else {
+      customMultipleDiv.style.display = "none";
+    }
+  });
+
+  ["opsRisk", "clientRisk", "keyRisk"].forEach(id => {
+    document.getElementById(id).addEventListener("change", updateBulletsOnly);
+  });
+
+  calculateBtn.addEventListener("click", calculateEV);
+});
+
+function updateBulletsOnly() {
+  const bullets = [];
+  if (document.getElementById("opsRisk").checked) bullets.push("Operations add-on: +7%");
+  if (document.getElementById("clientRisk").checked) bullets.push("Client concentration add-on: +10%");
+  if (document.getElementById("keyRisk").checked) bullets.push("Key personnel add-on: +10%");
+
+  const bulletContainer = document.getElementById("riskBullets");
+  bulletContainer.innerHTML = "";
+  bullets.forEach(item => {
+    const li = document.createElement("li");
+    li.innerText = item;
+    bulletContainer.appendChild(li);
+  });
+}
+
+function calculateEV() {
+  const ebitda = parseFloat(document.getElementById("ebitda").value) * 1_000_000;
+  let disruption = parseFloat(document.getElementById("baseline").value) / 100;
+
+  if (document.getElementById("opsRisk").checked) disruption += 0.07;
+  if (document.getElementById("clientRisk").checked) disruption += 0.10;
+  if (document.getElementById("keyRisk").checked) disruption += 0.10;
+
+  let industryMultiple = parseFloat(document.getElementById("industry").value);
+
+  if (document.getElementById("industry").selectedOptions[0].text.includes("Real Estate")) {
+    industryMultiple = parseFloat(document.getElementById("reMultiple").value);
+  }
+
+  const normalizedEBITDA = ebitda * (1 - disruption);
+  const evBase = ebitda * industryMultiple;
+  const evRisk = normalizedEBITDA * industryMultiple;
+  const evAtRisk = evBase - evRisk;
+
+  document.getElementById("output").innerHTML =
+    `<div>Enterprise Value at Risk: $${evAtRisk.toLocaleString()}</div>`;
+
+  renderEVChart(evAtRisk);
+}
+
+function renderEVChart(evAtRiskToday) {
+  const years = parseInt(document.getElementById("exitYears").value);
+
+  const evInflation =
+    evAtRiskToday * Math.pow(1 + INFLATION_RATE, years);
+
+  const evGrowth =
+    evAtRiskToday * Math.pow(1 + INFLATION_RATE + CONSERVATIVE_TECH_GROWTH, years);
+
+  const canvas = document.getElementById("evChart");
+  const ctx = canvas.getContext("2d");
+  canvas.style.display = "block";
+
+  if (evChartInstance) evChartInstance.destroy();
+
+  evChartInstance = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: [
+        "EV at Risk Today",
+        "EV at Exit (Inflation)",
+        "EV at Exit (Inflation + Growth)"
+      ],
+      datasets: [{
+        data: [evAtRiskToday, evInflation, evGrowth],
+        backgroundColor: ["#336633", "#ccaa33", "#003366"]
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: v => `$${(v / 1_000_000).toFixed(0)}M`
+          }
+        }
+      }
+    }
+  });
+}
 
 
 //v11 code 
